@@ -28,7 +28,7 @@ function xsrf-createsum($addsalt){
    $token = $token.$addstalt;
    }
    $token = md5($token);
-   $_SESSION['token'] = $token;
+   echo "<input type='hidden' name='xsrf-token' value='".$token."'>";
 }
 function xsrf-verifysum($addsalt){
    $domain = $_SERVER['SERVER_NAME'];
@@ -40,10 +40,10 @@ function xsrf-verifysum($addsalt){
    }
    $token = md5($token);
    
-   if(!isset($_SESSION['token'])){
+   if(!isset($_POST['token']) || !isset($_GET['token'])){
     array_push($xsrf-error,"No token created");
     die();
-   }elseif($_SESSION['token'] =! $token){
+   }elseif($_POST['token'] =! $token && $_GET['token'] =! $token){
     array_push($xsrf-error,"Token invalid");
     die();
    }
