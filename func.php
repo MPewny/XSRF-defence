@@ -1,7 +1,7 @@
 <?php
 session_start();
 $xsrf-error = array();
-function xsrf-request-domain($domain){
+function xsrf_request_domain($domain){
    $selfDomain = $_SERVER['SERVER_NAME'];
    $request = parse_url($_SERVER['HTTP_REFERER']);
    $reqDomain = $referer['host'];
@@ -10,7 +10,7 @@ if($selfDomain =! $reqDomain){
  die();
 }
   }
-function xsrf-request-src($url){
+function xsrf_request_src($url){
    $expectedURL = $url;
    $reqURL = $_SERVER['HTTP_REFERER'];
  array_push($xsrf-error, "Request referer URL invalid. Expected request source:".$url);
@@ -19,7 +19,7 @@ function xsrf-request-src($url){
 function xsrf-token($opt, $type){
 
   }
-function xsrf-createsum($addsalt){
+function xsrf_createsum($addsalt){
    $domain = $_SERVER['SERVER_NAME'];
    $UA = $_SERVER['HTTP_USER_AGENT'];
    $form = $_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];
@@ -30,7 +30,7 @@ function xsrf-createsum($addsalt){
    $token = md5($token);
    echo "<input type='hidden' name='xsrf-token' value='".$token."'>";
 }
-function xsrf-verifysum($addsalt){
+function xsrf_verifysum($addsalt){
    $domain = $_SERVER['SERVER_NAME'];
    $UA = $_SERVER['HTTP_USER_AGENT'];
    $form = $_SERVER['HTTP_REFERER'];
@@ -48,7 +48,7 @@ function xsrf-verifysum($addsalt){
     die();
    }
   }
-function xsrf-error(){
+function xsrf_error(){
  $_SESSION['xsrferr'] = $xsrf-error;
  header("Location:xsrf-err.php");
  die();
