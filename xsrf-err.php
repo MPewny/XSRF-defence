@@ -6,7 +6,7 @@ session_start();
    <title><?php echo $_SERVER['SERVER_NAME']." XSRF protection system";?></title>
    <meta name="plugin_author" value="Marcel Pewny - MPewny">
    <meta name="author_github" value="https://github.com/MPewny">
-   
+
  </head>
  <style>
    body{
@@ -55,10 +55,10 @@ session_start();
  <div class="main">
  <div class="errorlog">
    <?php
-    for($i = 0; $i == true; $i ++){
-     echo "<br><hr><br>".$_SESSION['xsrferr'][$err];
-    }
-    unset $_SESSION['xsrferr'];
+
+     echo "<br> <hr> <br>". $_SESSION['xsrferr'];
+    
+    unset $_SESSION['xsrfError'];
    ?>
    </div>
   <br>
