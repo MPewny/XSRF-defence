@@ -1,6 +1,4 @@
-<?php
-session_start();
-?>
+
 <html>
  <head>
    <title><?php echo $_SERVER['SERVER_NAME']." XSRF protection system";?></title>
@@ -56,14 +54,21 @@ session_start();
  <div class="errorlog">
    <?php
 
-     echo "<br> <hr> <br>". $_SESSION['xsrfError'];
 
-    unset( $_SESSION['xsrfError']);
+   $message = ( isset( $_SESSION['xsrfError'] ) ) ? $_SESSION['xsrfError'] : "No errors yet! Let it stay thay way ;)";
+
+    echo "<h1> XSRF Error! </h1>";
+     echo "<hr>";
+     echo $message;
+     echo "<br>";
+     echo "<a href='". $_SERVER['HTTP_REFERER'] ."'>Get back</a>";
+
+    unset( $message);
    ?>
    </div>
   <br>
   <div class="footer">
-   <center>Plugin coded by <a href="https://github.com/MPewny">MPewny</a></center></div>
+   <center>Plugin coded by <a href="https://github.com/TheParnoik">paranoik</a></center></div>
 </div>
  </body>
 <html>

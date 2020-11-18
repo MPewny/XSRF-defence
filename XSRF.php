@@ -2,48 +2,75 @@
 
 class xsrf {
 
-    public string $error;
+    private $error = "No errors yet! Let it stay thay way ;)";
 
-    public string $XSRFErrorUrl = 'xsrf-err.php'; // Change to your prefered error display URL
+    public $XSRFErrorUrl = 'xsrf-err.php'; // Change to your prefered error display URL
 
-    function CreateVerificationSum(){
+    public static function CreateVerificationToken( $length = 8 ){
 
-       $_SESSION['xsrfSalt'] = rand( 1 , 9999 );
+      $token = "xsrf-";
+
+      for ($i = 0; $i < $length; $i++ ){ // Yes. I could've called it for examlpe "incrementation" or smth... but it would be profanation I guess..
+
+        $character = rand( 0, 9 );
+
+        $token .= $character;
+
+      }
+
+      $_SESSION['token'] = $token;
+
+      return $token;
+    }
+
+    public static function CreateVerificationSum(){
+
+       $_SESSION['xsrfSalt'] = rand( 10 , 9999 );
 
        $domain = $_SERVER['SERVER_NAME'];
        $UA = $_SERVER['HTTP_USER_AGENT'];
-       $form = $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'];
-       $sum = $domain . $UA . $form . $_SESSION['xsrfSalt'];
-       $sum = md5($token);
+       $sum = $domain . $UA . $_SESSION['xsrfSalt'];
+
+       $sum = md5($sum);
 
        return $sum;
 
     }
 
-    function VerifyByDomain( $domain ){
+    public function VerifyByDomain( $domain = false ){
 
        $validDomain = ( $domain ) ? $domain : $_SERVER['SERVER_NAME'];
-       $requestDomain = parse_url( $_SERVER['HTTP_REFERER'] , PHP_URL_HOST);
+       $requestDomain = parse_url( $_SERVER['HTTP_REFERER'] , PHP_URL_HOST );
 
-          if( $validDomain =! $requestDomain ){
+          if( $validDomain !== $requestDomain ){
 
-           $this->error = "Request domain invalid" ;
+           $this->error = "Request domain is invalid";
 
            return false;
           }
+
 
         return true;
 
       }
 
-    function VerifyBySource( $expectedUrl ){
+    public function VerifyBySource( $expectedUrl  ){
 
-       $reqURL = $_SERVER['HTTP_REFERER'];
+      $requestURL = $_SERVER['HTTP_REFERER'];
 
-       $this->error = "Request referer URL invalid. Expected request source:". $expectedUrl ;
+      $expectedUrl =
+      ( substr( $expectedUrl, 0, 7 ) === "http://" || substr( $expectedUrl, 0, 8 ) === "https://" ) ?
+      $expectedUrl :
+      parse_url( $requestURL, PHP_URL_SCHEME ) . "://" . $expectedUrl;
 
-       return false;
 
+      if ( $requestURL !== $expectedUrl ){
+         $this->error = "Request referer URL is invalid.";
+
+         return false;
+       }
+
+       return true;
       }
 
     public function VerifyBySum(){
@@ -51,18 +78,17 @@ class xsrf {
        $salt = $_SESSION['xsrfSalt'];
        $domain = $_SERVER['SERVER_NAME'];
        $UA = $_SERVER['HTTP_USER_AGENT'];
-       $form = $_SERVER['HTTP_REFERER'];
-       $token = $domain.$UA.$form. $salt;
+       $sum = $domain . $UA . $salt;
 
-       $token = md5($token);
+       $sum = md5($sum);
 
-       if(!isset($_POST['token']) || !isset($_GET['token'])){
+       if(!isset($_POST['token'])){
 
         $this->error = "No token created";
 
         return false;
 
-       }elseif( $_POST['token'] =! $token && $_GET['token'] =! $token ){
+      }elseif( $_POST['token'] !== $sum ){
 
         $this->error = "Token invalid";
 
@@ -75,13 +101,48 @@ class xsrf {
        return true;
       }
 
-    public function DisplayError(){
+      public function VerifyByToken(){
 
-     $_SESSION['xsrfError'] = $this->error;
+         if(!isset($_POST['token'])){
 
-     header("Location:" . $XSRFErrorUrl);
+            $this->error = "No token created";
 
-    }
+            unset( $_POST['token'], $_SESSION['token'] );
+
+            return false;
+
+          }elseif( $_POST['token'] !== $_SESSION['token'] ){
+
+            $this->error = "Token invalid";
+
+            unset( $_POST['token'], $_SESSION['token'] );
+
+            return false;
+
+          }
+
+         unset( $_POST['token'], $_SESSION['token'] );
+
+         return true;
+        }
+
+        public function DisplayError(){
+
+         $_SESSION['xsrfError'] = $this->error;
+
+         include ( $this->XSRFErrorUrl );
+
+         die;
+
+        }
+
+        public function ErrorMessage(){
+
+          $result = ($this->error) ? $this->error : "There is no error massage.";
+
+         return $result;
+
+        }
 
 }
 ?>
