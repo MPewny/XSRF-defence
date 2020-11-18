@@ -7,6 +7,7 @@ class xsrf {
     public string $XSRFErrorUrl = 'xsrf-err.php'; // Change to your prefered error display URL
 
     function CreateVerificationSum(){
+
        $_SESSION['salt'] = rand( 1 , 9999 );
 
        $domain = $_SERVER['SERVER_NAME'];
@@ -45,9 +46,6 @@ class xsrf {
 
       }
 
-
-
-
     public function VerifyBySum(){
 
        $salt
@@ -78,9 +76,11 @@ class xsrf {
       }
 
     public function DisplayError(){
+
      $_SESSION['xsrfError'] = $this->error;
+
      header("Location:" . $XSRFErrorUrl);
-     die();
+     
     }
 
 }
