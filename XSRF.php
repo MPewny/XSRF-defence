@@ -8,12 +8,12 @@ class xsrf {
 
     function CreateVerificationSum(){
 
-       $_SESSION['salt'] = rand( 1 , 9999 );
+       $_SESSION['xsrfSalt'] = rand( 1 , 9999 );
 
        $domain = $_SERVER['SERVER_NAME'];
        $UA = $_SERVER['HTTP_USER_AGENT'];
        $form = $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'];
-       $sum = $domain . $UA . $form . $_SESSION['salt'];
+       $sum = $domain . $UA . $form . $_SESSION['xsrfSalt'];
        $sum = md5($token);
 
        return $sum;
@@ -48,19 +48,17 @@ class xsrf {
 
     public function VerifyBySum(){
 
-       $salt
+       $salt = $_SESSION['xsrfSalt'];
        $domain = $_SERVER['SERVER_NAME'];
        $UA = $_SERVER['HTTP_USER_AGENT'];
        $form = $_SERVER['HTTP_REFERER'];
-       $token = $domain.$UA.$form;
-       if(isset($addsalt)){
-       $token = $token.$salt;
-       }
+       $token = $domain.$UA.$form. $salt;
+
        $token = md5($token);
 
        if(!isset($_POST['token']) || !isset($_GET['token'])){
 
-        $this->error,"No token created");
+        $this->error = "No token created";
 
         return false;
 
@@ -68,9 +66,11 @@ class xsrf {
 
         $this->error = "Token invalid";
 
-        return false
+        return false;
 
        }
+
+       unset($_SESSION['xsrfSalt']);
 
        return true;
       }
@@ -80,7 +80,7 @@ class xsrf {
      $_SESSION['xsrfError'] = $this->error;
 
      header("Location:" . $XSRFErrorUrl);
-     
+
     }
 
 }
