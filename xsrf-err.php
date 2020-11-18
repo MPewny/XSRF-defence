@@ -56,9 +56,9 @@ session_start();
  <div class="errorlog">
    <?php
 
-     echo "<br> <hr> <br>". $_SESSION['xsrferr'];
-    
-    unset $_SESSION['xsrfError'];
+     echo "<br> <hr> <br>". $_SESSION['xsrfError'];
+
+    unset( $_SESSION['xsrfError']);
    ?>
    </div>
   <br>
