@@ -33,7 +33,7 @@ class xsrf {
 
         $sum = $domain . $UA . $salt;
 
-        $_SESSION['xsrfSalt'] = $salt
+        $_SESSION['xsrfSalt'] = $salt;
 
         $sum = md5($sum);
 
