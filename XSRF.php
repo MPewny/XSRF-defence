@@ -6,7 +6,7 @@ class xsrf {
 
     public $XSRFErrorUrl = 'xsrf-err.php'; // Change to your prefered error display URL
 
-    public static function CreateVerificationToken( $length = 8 ){
+    public static function createVerificationToken( $length = 8 ){
 
       $token = "xsrf-";
 
@@ -23,7 +23,7 @@ class xsrf {
       return $token;
     }
 
-    public static function CreateVerificationSum(){
+    public static function createVerificationSum(){
 
        $_SESSION['xsrfSalt'] = rand( 10 , 9999 );
 
@@ -37,7 +37,7 @@ class xsrf {
 
     }
 
-    public function VerifyByDomain( $domain = false ){
+    public function verifyByDomain( $domain = false ){
 
        $validDomain = ( $domain ) ? $domain : $_SERVER['SERVER_NAME'];
        $requestDomain = parse_url( $_SERVER['HTTP_REFERER'] , PHP_URL_HOST );
@@ -54,7 +54,7 @@ class xsrf {
 
       }
 
-    public function VerifyBySource( $expectedUrl  ){
+    public function verifyBySource( $expectedUrl  ){
 
       $requestURL = $_SERVER['HTTP_REFERER'];
 
@@ -73,7 +73,7 @@ class xsrf {
        return true;
       }
 
-    public function VerifyBySum(){
+    public function verifyBySum(){
 
        $salt = $_SESSION['xsrfSalt'];
        $domain = $_SERVER['SERVER_NAME'];
@@ -101,7 +101,7 @@ class xsrf {
        return true;
       }
 
-      public function VerifyByToken(){
+      public function verifyByToken(){
 
          if(!isset($_POST['token'])){
 
@@ -126,7 +126,7 @@ class xsrf {
          return true;
         }
 
-        public function DisplayError(){
+        public function displayError(){
 
          $_SESSION['xsrfError'] = $this->error;
 
@@ -136,7 +136,7 @@ class xsrf {
 
         }
 
-        public function ErrorMessage(){
+        public function errorMessage(){
 
           $result = ($this->error) ? $this->error : "There is no error massage.";
 
