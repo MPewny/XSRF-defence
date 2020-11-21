@@ -23,15 +23,21 @@ class xsrf {
 
     public static function createVerificationSum(){
 
-       $_SESSION['xsrfSalt'] = random_bytes( 8 );
+        $salt = random_bytes( 8 );
 
-       $domain = $_SERVER['SERVER_NAME'];
-       $UA = $_SERVER['HTTP_USER_AGENT'];
-       $sum = $domain . $UA . $_SESSION['xsrfSalt'];
+        $salt = bin2hex( $salt );
 
-       $sum = md5($sum);
+        $domain = $_SERVER['SERVER_NAME'];
 
-       return $sum;
+        $UA = $_SERVER['HTTP_USER_AGENT'];
+
+        $sum = $domain . $UA . $salt;
+
+        $_SESSION['xsrfSalt'] = $salt
+
+        $sum = md5($sum);
+
+        return $sum;
 
     }
 
