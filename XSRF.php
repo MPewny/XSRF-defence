@@ -4,7 +4,7 @@ class xsrf {
 
     private $error = "No errors yet! Let it stay thay way ;)";
 
-    public $XSRFErrorUrl = 'xsrf-err.php'; // Change to your prefered error display URL
+    public $XSRFErrorUrl = ''; // You can change it to your prefered default error display URL
 
     public static function createVerificationToken( int $size = 8 ){
 
