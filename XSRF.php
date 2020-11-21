@@ -6,17 +6,15 @@ class xsrf {
 
     public $XSRFErrorUrl = 'xsrf-err.php'; // Change to your prefered error display URL
 
-    public static function createVerificationToken( $length = 8 ){
+    public static function createVerificationToken( int $size = 8 ){
 
       $token = "xsrf-";
 
-      for ($i = 0; $i < $length; $i++ ){ // Yes. I could've called it for examlpe "incrementation" or smth... but it would be profanation I guess..
+      $data = random_bytes( $size );
 
-        $character = rand( 0, 9 );
+      $data = bin2hex( $data );
 
-        $token .= $character;
-
-      }
+      $token .= $data;
 
       $_SESSION['token'] = $token;
 
@@ -25,7 +23,7 @@ class xsrf {
 
     public static function createVerificationSum(){
 
-       $_SESSION['xsrfSalt'] = rand( 10 , 9999 );
+       $_SESSION['xsrfSalt'] = random_bytes( 8 );
 
        $domain = $_SERVER['SERVER_NAME'];
        $UA = $_SERVER['HTTP_USER_AGENT'];
@@ -108,6 +106,12 @@ class xsrf {
             $this->error = "No token created";
 
             unset( $_POST['token'], $_SESSION['token'] );
+
+            return false;
+
+          }elseif( ! isset ( $_SESSION['token'] ) ){
+
+            $this->error = "Token for this request doesn't exist on the server";
 
             return false;
 
