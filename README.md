@@ -28,3 +28,42 @@ Simple library made to protect Your web app from [XSRF](https://owasp.org/www-co
 | verifyBySource | $expectedUrl (String, URL of the form you expect the request from, Default id false) | Verifies if the HTTP_REFERER is identical to expected URL, if yes returns true |
 | displayError | none | Displays the error screen using error URL (XSRFErrorUrl) and message (error) |
 | errorMessage | none | Returns error message |
+
+## Simple example
+
+```PHP
+<?php
+session_start();
+
+require_once 'XSRF.php';
+
+$xsrf = new xsrf();
+
+$xsrf->XSRFErrorUrl = "your/XSRF/error-page.php";
+
+if ( $_SERVER['REQUEST_METHOD'] == "POST" ){
+
+
+  if ( $xsrf->verifyByToken() ){
+
+    // your auth code...
+  }else{
+
+    echo $xsrf->displayError();
+
+  }
+
+}
+
+?>
+
+<html>
+  <body>
+    <form method="post">
+      <input type="text" name="username">
+      <input type="password" name="password">
+      <input type="hidden" name="token" value="<?php echo $xsrf->createVerificationToken(); ?>">
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+```
