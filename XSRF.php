@@ -58,7 +58,13 @@ class xsrf {
 
       }
 
-    public function verifyBySource( $expectedUrl  ){
+    public function verifyBySource( $expectedUrl = false  ){
+
+      if ( ! $expectedUrl ){
+        $this->error = "Expected URL has not been given.";
+
+        return false;
+      }
 
       $requestURL = $_SERVER['HTTP_REFERER'];
 
