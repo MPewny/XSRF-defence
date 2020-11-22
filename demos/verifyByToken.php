@@ -12,7 +12,7 @@ if ( isset( $_POST['text'] ) ){
     echo 'Success! You sent: '. $_POST['text'] .' <br>';
   }else{
 
-    echo $xsrf->ErrorMessage();
+    echo $xsrf->errorMessage();
 
   }
 
