@@ -25,7 +25,7 @@ Simple library made to protect Your web app from [XSRF](https://owasp.org/www-co
 | verifyByToken | none | Verifies if `token` stored in session and $_POST['token'] are identical. if yes returns true. |
 | verifyBySum | none | Generates the sum on the server side and verifies if it's identical to $_POST['token'], if yes returns true |
 | verifyByDomain | $domain (String, Expected referer domain, Default is false) | Verifies if referer domain and expected domain are identical,if yes returns true. If $domain is not set it will assume its $_SERVER['SERVER_NAME'] |
-| verifyBySource | $expectedUrl (String, URL of the form you expect the request from, Default id false) | Verifies if the HTTP_REFERER is identical to expected URL, if yes returns true |
+| verifyBySource | $expectedUrl (String, URL of the form you expect the request from, Default is false) | Verifies if the HTTP_REFERER is identical to expected URL, if yes returns true |
 | displayError | none | Displays the error screen using error URL (XSRFErrorUrl) and message (error) |
 | errorMessage | none | Returns error message |
 
