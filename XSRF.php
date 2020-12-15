@@ -111,13 +111,13 @@ class xsrf {
        return true;
       }
 
-      public function verifyByToken(){
+      public function verifyByToken( $toVerify = 0 ){
 
-         if(!isset($_POST['token'])){
+         if(!$toVerify){
 
             $this->error = "No token created";
 
-            unset( $_POST['token'], $_SESSION['token'] );
+            unset( $toVerify, $_SESSION['token'] );
 
             return false;
 
@@ -127,17 +127,17 @@ class xsrf {
 
             return false;
 
-          }elseif( $_POST['token'] !== $_SESSION['token'] ){
+          }elseif( $toVerify !== $_SESSION['token'] ){
 
             $this->error = "Token invalid";
 
-            unset( $_POST['token'], $_SESSION['token'] );
+            unset( $toVerify, $_SESSION['token'] );
 
             return false;
 
           }
 
-         unset( $_POST['token'], $_SESSION['token'] );
+         unset( $toVerify, $_SESSION['token'] );
 
          return true;
         }
