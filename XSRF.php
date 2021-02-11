@@ -5,20 +5,20 @@ class xsrf {
     private $error = "No errors yet! Let it stay thay way ;)";
 
     public $XSRFErrorUrl = ''; // You can change it to your prefered default error display URL
+    
+    public $tokenPrefix = "xsrf-"; // You can change it to your prefered token prefix
+
 
     public static function createVerificationToken( int $size = 8 ){
 
-      $token = "xsrf-";
-
+      
       $data = random_bytes( $size );
 
       $data = bin2hex( $data );
 
-      $token .= $data;
+      $_SESSION['token'] = $this->tokenPrefix . $data;
 
-      $_SESSION['token'] = $token;
-
-      return $token;
+      return $_SESSION['token'];
     }
 
     public static function createVerificationSum(){
